@@ -1,3 +1,4 @@
+// $(document).ready(function(){
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -27,6 +28,15 @@ cube2.position.z = 0;
 
 scene.add( cube2 );
 
+//Planar Surface
+var surfaceGeometry = new THREE.PlaneGeometry(window.innerWidth,window.innerHeight,0);
+var surfaceMaterial = new THREE.MeshBasicMaterial( {color: 0x0000FF});
+var plane = new THREE.Mesh( surfaceGeometry, surfaceMaterial);
+plane.position.z = -499;
+// plane.repeat = true;
+
+scene.add( plane );
+
 //Basic Circle
 // var material = new THREE.MeshBasicMaterial({
 // 	color: 0x0000ff
@@ -47,26 +57,28 @@ var sphere = new THREE.Mesh( geometry, material );
 
 sphere.position.x = 0;
 sphere.position.y = 0;
-sphere.position.z = 100;
+sphere.position.z = 0;
 
 scene.add( sphere );
+
+
 
 // var light = new THREE.AmbientLight(0x404040); // soft white light
 // scene.add( light );
 
-var spotLight = new THREE.SpotLight( 0xffffff );
-spotLight.position.set( 100, 1000, 200 );
+// var spotLight = new THREE.SpotLight( 0xffffff );
+// spotLight.position.set( 100, 1000, 200 );
 
-spotLight.castShadow = true;
+// spotLight.castShadow = true;
 
-spotLight.shadowMapWidth = 1024;
-spotLight.shadowMapHeight = 1024;
+// spotLight.shadowMapWidth = 1024;
+// spotLight.shadowMapHeight = 1024;
 
-spotLight.shadowCameraNear = 500;
-spotLight.shadowCameraFar = 4000;
-spotLight.shadowCameraFov = 30;
+// spotLight.shadowCameraNear = 500;
+// spotLight.shadowCameraFar = 4000;
+// spotLight.shadowCameraFov = 30;
 
-scene.add( spotLight );
+// scene.add( spotLight );
 
 // var spotLight = new THREE.SpotLight( 0xffffff );
 // spotLight.position.set( 0, -1000, 200 );
@@ -102,9 +114,42 @@ camera.position.z = 500;
 // camera.position.x = 5;
 // camera.position.y = -3;
 
+//Adjust Camera position/rotation based on arrow keydown
+//this is very rudimentary and will need a lot of improvement.  Also, the rotation is very awkward
+$(document).on('keydown', function(e){
+	// console.log(e.keyCode);
+	// console.log(e.shiftKey);
+
+	//Rotate Left
+	if(e.keyCode === 37){
+		camera.rotation.y += 0.01;
+	}
+	//Rotate Right
+	if(e.keyCode === 39){
+		camera.rotation.y -= 0.01;
+	}
+	//Move Forward
+	if(e.keyCode === 38){
+		if(e.shiftKey){
+			camera.position.z -= 10.00;	//Move 10x as fast if shift is held down
+		}else{
+			camera.position.z -= 1.00; //Move at standard pace when only the arrow key is down
+		}
+	}
+	//Move Backward
+	if(e.keyCode === 40){
+		if(e.shiftKey){
+			camera.position.z += 10.00;	//Move 10x as fast if shift is held down
+		}else{
+			camera.position.z += 1.00; //Move at standard pace when only the arrow key is down
+		}
+	}
+});
+
 function render() {
 
 	requestAnimationFrame(render); //loop animation at 60 fps
+
 
 	//rotate the cube about the x and y axes
 	// cube.rotation.x += 0.01;
@@ -113,22 +158,14 @@ function render() {
 	//change the position of the sphere up, right, and away
 	// sphere.position.x += 0.5;
 	// sphere.position.y += 0.1;
+	// sphere.position.z -= .1;
 
 
-	//Conditionally adjust camera position
-	// if(camera.position.x >= 300 || camera.position.z >= 600){
-	// 	camera.position.x = 0;
-	// 	camera.position.z = 300;
-	// }else{
-	// 	camera.position.x += 0;
-	// 	camera.position.z += 1;
-	// }
-	
-	// camera.position.y += 1;
-	// pointLight.intensity += 0.001;
-	
-	// console.log(camera.position.x, camera.position.z);
+
 
 	renderer.render(scene, camera);
 }
 render();
+
+
+// });
