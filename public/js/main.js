@@ -28,14 +28,29 @@ cube2.position.z = 0;
 
 scene.add( cube2 );
 
-//Planar Surface
-var surfaceGeometry = new THREE.PlaneGeometry(window.innerWidth,window.innerHeight,0);
-var surfaceMaterial = new THREE.MeshBasicMaterial( {color: 0x0000FF});
-var plane = new THREE.Mesh( surfaceGeometry, surfaceMaterial);
-plane.position.z = -499;
-// plane.repeat = true;
+//Create Sky Texture
+var skyTexture = THREE.ImageUtils.loadTexture('../images/sky.jpg');
+skyTexture.name = "Sky";
+skyTexture.wrapS = THREE.RepeatWrapping;
+skyTexture.wrapT = THREE.RepeatWrapping;
+skyTexture.repeat.set(1,1);
 
-scene.add( plane );
+//Planar Surface
+var skyGeometry = new THREE.PlaneGeometry(window.innerWidth*2,window.innerHeight*2,0);
+var skyMaterial = new THREE.MeshBasicMaterial( {map: skyTexture});
+var skyPlane = new THREE.Mesh( skyGeometry, skyMaterial);
+skyPlane.position.z = -499;
+
+scene.add( skyPlane );
+
+var groundGeometry = new THREE.PlaneGeometry(window.innerWidth*2,window.innerHeight,0);
+var groundMaterial = new THREE.MeshBasicMaterial( {color: 0xFF0000});
+var groundPlane = new THREE.Mesh( groundGeometry, groundMaterial);
+groundPlane.position.z = -499;
+groundPlane.position.y = -450;
+groundPlane.rotation.x = -Math.PI/2;
+
+scene.add( groundPlane );
 
 //Basic Circle
 // var material = new THREE.MeshBasicMaterial({
@@ -63,22 +78,22 @@ scene.add( sphere );
 
 
 
-// var light = new THREE.AmbientLight(0x404040); // soft white light
-// scene.add( light );
+var light = new THREE.AmbientLight(0x101010); // soft white light
+scene.add( light );
 
-// var spotLight = new THREE.SpotLight( 0xffffff );
-// spotLight.position.set( 100, 1000, 200 );
+var spotLight = new THREE.SpotLight( 0xFFFFFF );
+spotLight.position.set( 0, -100, 100 );
 
-// spotLight.castShadow = true;
+spotLight.castShadow = true;
 
-// spotLight.shadowMapWidth = 1024;
-// spotLight.shadowMapHeight = 1024;
+spotLight.shadowMapWidth = 1024;
+spotLight.shadowMapHeight = 1024;
 
-// spotLight.shadowCameraNear = 500;
-// spotLight.shadowCameraFar = 4000;
-// spotLight.shadowCameraFov = 30;
+spotLight.shadowCameraNear = 500;
+spotLight.shadowCameraFar = 4000;
+spotLight.shadowCameraFov = 30;
 
-// scene.add( spotLight );
+scene.add( spotLight );
 
 // var spotLight = new THREE.SpotLight( 0xffffff );
 // spotLight.position.set( 0, -1000, 200 );
@@ -95,19 +110,28 @@ scene.add( sphere );
 // scene.add( spotLight );
 
 //Casts a full color point light that is positioned at 10,50,130
-var pointLight = new THREE.PointLight(0x999999);
-pointLight.position.x = -10;
-pointLight.position.y = -30;
-pointLight.position.z = 200;
+// var pointLight = new THREE.PointLight(0xFFFFFF,1,500);
+// pointLight.position.x = 0;
+// pointLight.position.y = -100;
+// pointLight.position.z = 0;
 
-scene.add( pointLight );
+// scene.add( pointLight );
 
-var pointLight = new THREE.PointLight(0x999999);
-pointLight.position.x = 0;
-pointLight.position.y = 200;
-pointLight.position.z = 130;
+// var pointLight2 = new THREE.PointLight(0xFFFFFF,1,1000);
+// pointLight2.position.x = 0;
+// pointLight2.position.y = 100;
+// pointLight2.position.z = 0;
 
-scene.add( pointLight );
+// scene.add( pointLight2 );
+
+//Directional Light at half intensity.  This shines from a single direction as though from an infinite distance.  (like the Sun)
+// var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+// directionalLight.position.set( 0, 1, 0 );
+// scene.add( directionalLight );
+
+//Hemisphere Light
+var hemisphereLight = new THREE.HemisphereLight(0xFFFFFF, 1.0)
+scene.add( hemisphereLight );
 
 //Adjust camera position in the x,y, or z axis
 camera.position.z = 500;
