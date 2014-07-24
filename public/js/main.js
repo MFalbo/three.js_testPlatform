@@ -8,11 +8,11 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
 //Basic Cube
-var geometry = new THREE.BoxGeometry(100,500,100);
+var geometry = new THREE.BoxGeometry(10,50,10);
 var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
 var cube = new THREE.Mesh( geometry, material );
 
-cube.position.x = -200;
+cube.position.x = -20;
 cube.position.y = 0;
 cube.position.z = 0;
 
@@ -22,7 +22,7 @@ scene.add( cube );
 // var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
 var cube2 = new THREE.Mesh( geometry, material );
 
-cube2.position.x = 200;
+cube2.position.x = 20;
 cube2.position.y = 0;
 cube2.position.z = 0;
 
@@ -43,11 +43,11 @@ skyPlane.position.z = -499;
 
 scene.add( skyPlane );
 
-var groundGeometry = new THREE.PlaneGeometry(window.innerWidth*2,window.innerHeight,0);
-var groundMaterial = new THREE.MeshBasicMaterial( {color: 0xFF0000});
+var groundGeometry = new THREE.PlaneGeometry(window.innerWidth*2,window.innerHeight*2,0);
+var groundMaterial = new THREE.MeshLambertMaterial( {color: 0xFF0000});
 var groundPlane = new THREE.Mesh( groundGeometry, groundMaterial);
-groundPlane.position.z = -499;
-groundPlane.position.y = -450;
+groundPlane.position.z = 0;
+groundPlane.position.y = -45;
 groundPlane.rotation.x = -Math.PI/2;
 
 scene.add( groundPlane );
@@ -65,11 +65,11 @@ scene.add( groundPlane );
 // scene.add( circle );
 
 //Basic Sphere
-var geometry = new THREE.SphereGeometry( 50, 64, 64 ); //radius, segments, rings
+var geometry = new THREE.SphereGeometry( 5, 64, 64 ); //radius, segments, rings
 // var material = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //basic mesh material with a color yellow
 var material = new THREE.MeshLambertMaterial( {color: 0xFFFF00} ); //mesh lambert material which requires the reflection of light
 var sphere = new THREE.Mesh( geometry, material );
-
+// sphere.receiveShadow = true;
 sphere.position.x = 0;
 sphere.position.y = 0;
 sphere.position.z = 0;
@@ -78,25 +78,11 @@ scene.add( sphere );
 
 
 
-var light = new THREE.AmbientLight(0x101010); // soft white light
-scene.add( light );
+var ambientLight = new THREE.AmbientLight(0x101010); // soft white light
+scene.add( ambientLight );
 
-var spotLight = new THREE.SpotLight( 0xFFFFFF );
-spotLight.position.set( 0, -100, 100 );
-
-spotLight.castShadow = true;
-
-spotLight.shadowMapWidth = 1024;
-spotLight.shadowMapHeight = 1024;
-
-spotLight.shadowCameraNear = 500;
-spotLight.shadowCameraFar = 4000;
-spotLight.shadowCameraFov = 30;
-
-scene.add( spotLight );
-
-// var spotLight = new THREE.SpotLight( 0xffffff );
-// spotLight.position.set( 0, -1000, 200 );
+// var spotLight = new THREE.SpotLight( 0xFFFFFF );
+// spotLight.position.set( 0, -100, 100 );
 
 // spotLight.castShadow = true;
 
@@ -108,6 +94,23 @@ scene.add( spotLight );
 // spotLight.shadowCameraFov = 30;
 
 // scene.add( spotLight );
+
+var spotLight = new THREE.SpotLight( 0xffffff );
+spotLight.position.set( 0, 10000, 0 );
+
+spotLight.castShadow = true;
+spotLight.shadowCameraVisible = true;
+
+
+spotLight.shadowMapWidth = 1024;
+spotLight.shadowMapHeight = 1024;
+
+spotLight.shadowCameraNear = 500;
+spotLight.shadowCameraFar = 4000;
+spotLight.shadowCameraFov = 30;
+
+
+scene.add( spotLight );
 
 //Casts a full color point light that is positioned at 10,50,130
 // var pointLight = new THREE.PointLight(0xFFFFFF,1,500);
@@ -130,7 +133,8 @@ scene.add( spotLight );
 // scene.add( directionalLight );
 
 //Hemisphere Light
-var hemisphereLight = new THREE.HemisphereLight(0xFFFFFF, 1.0)
+var hemisphereLight = new THREE.HemisphereLight(0xFFFFFF, 0xFF0000, 1.0)
+hemisphereLight.castShadow = true;
 scene.add( hemisphereLight );
 
 //Adjust camera position in the x,y, or z axis
@@ -168,6 +172,8 @@ $(document).on('keydown', function(e){
 			camera.position.z += 1.00; //Move at standard pace when only the arrow key is down
 		}
 	}
+
+
 });
 
 function render() {
@@ -184,7 +190,17 @@ function render() {
 	// sphere.position.y += 0.1;
 	// sphere.position.z -= .1;
 
-
+	$(document).on('mousedown', function(e){
+		if(e.which === 3){
+			console.log($('canvas'));
+		}
+		console.log(e.type, e.which);
+		// while('mousedown'){
+		// 	 $(document).on('mousemove', function(e){
+		// 	 	console.log(e.pageX, e.pageY);
+		// 	 })
+		// }
+	})
 
 
 	renderer.render(scene, camera);
